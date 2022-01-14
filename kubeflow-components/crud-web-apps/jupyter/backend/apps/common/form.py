@@ -343,3 +343,113 @@ def add_notebook_volume(notebook, vol_name, claim, mnt_path):
     # Container Mounts
     mnt = {"mountPath": mnt_path, "name": vol_name}
     container["volumeMounts"].append(mnt)
+
+# Openshift OAuth proxy
+def add_ose_oauth_proxy(notebook):
+    notebook_name = notebook["metadata"]["name"]
+
+    if notebook_name == "scipy":
+        notebook_containers = notebook["spec"]["template"]["spec"]["containers"]
+        notebook_volumes = notebook["spec"]["template"]["spec"]["volumes"]
+
+        # Add the oauth proxy container to the notebook
+        oauth_proxy = {
+            "name": "oauth-proxy",
+            "image": "quay.io/samuvl/ose-oauth-proxy:fix-openshift-sar",
+            "imagePullPolicy": "IfNotPresent",
+            "env": [{
+                "name": "NAMESPACE",
+                "valueFrom": { "fieldRef": { "fieldPath": "metadata.namespace" } }
+            }],
+            "args": [
+                "--provider=openshift",
+                "--https-address=:8443",
+                "--http-address=",
+                "--openshift-service-account=default-editor",
+                "--cookie-name=_odh_oauth_proxy",
+                "--cookie-secret-file=/etc/oauth/config/cookie_secret",
+                "--cookie-domain=.apps.svelosol.dev.datahub.redhat.com",
+                "--pass-access-token=true",
+                "--tls-cert=/etc/tls/private/tls.crt",
+                "--tls-key=/etc/tls/private/tls.key",
+                "--upstream=http://localhost:8888",
+                "--upstream-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
+                "--skip-auth-regex=^/metrics",
+                "--email-domain=*",
+                """--openshift-sar={"verb":"get","resource":"notebooks","resourceAPIGroup":"kubeflow.org","name":"%s","namespace":"$(NAMESPACE)"}"""
+                    % (notebook_name),
+            ],
+            "ports": [
+                {
+                    "containerPort": 8443,
+                    "name": "oauth-proxy",
+                    "protocol": "TCP"
+                }
+            ],
+            "livenessProbe": {
+                "failureThreshold": 3,
+                "httpGet": {
+                    "path": "/oauth/healthz",
+                    "port": "oauth-proxy",
+                    "scheme": "HTTPS"
+                },
+                "initialDelaySeconds": 30,
+                "periodSeconds": 5,
+                "successThreshold": 1,
+                "timeoutSeconds": 1
+            },
+            "readinessProbe": {
+                "failureThreshold": 3,
+                "httpGet": {
+                    "path": "/oauth/healthz",
+                    "port": "oauth-proxy",
+                    "scheme": "HTTPS"
+                },
+                "initialDelaySeconds": 5,
+                "periodSeconds": 5,
+                "successThreshold": 1,
+                "timeoutSeconds": 1
+            },
+            "resources": {
+                "limits": {
+                    "cpu": "200m",
+                    "memory": "150Mi"
+                },
+                "requests": {
+                    "cpu": "100m",
+                    "memory": "50Mi"
+                }
+            },
+            "volumeMounts": [
+                {
+                    "name": "oauth-config",
+                    "mountPath": "/etc/oauth/config"
+                },
+                {
+                    "name": "tls-certificates",
+                    "mountPath": "/etc/tls/private"
+                }
+            ]
+        }
+
+        notebook_containers.append(oauth_proxy)
+
+        # Add TLS certificates and session_secret file as volumes
+        oauth_proxy_volumes = [
+            {
+                "name": "oauth-config",
+                "secret": {
+                    "defaultMode": 420,
+                    "secretName": "oauth-config"
+                }
+            },
+            {
+                "name": "tls-certificates",
+                "secret": {
+                    "defaultMode": 420,
+                    "secretName": "%s-tls" % (notebook_name)
+                }
+            }
+        ]
+
+        notebook_volumes += oauth_proxy_volumes

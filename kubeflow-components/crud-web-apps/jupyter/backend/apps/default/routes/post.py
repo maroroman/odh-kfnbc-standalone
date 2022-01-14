@@ -67,6 +67,9 @@ def post_pvc(namespace):
     # shm
     form.set_notebook_shm(notebook, body, defaults)
 
+    # Openshift OAuth
+    form.add_ose_oauth_proxy(notebook)
+
     log.info("Creating Notebook: %s", notebook)
     api.create_notebook(notebook, namespace)
 
