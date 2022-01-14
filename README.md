@@ -60,7 +60,7 @@ $ kustomize build manifests/overlays/openshift | oc apply -f -
 
 Verify that Jupyter web app pods are running, and the route is accessible:
 
-```
+```shell
 $ oc get pods -l app=jupyter-web-app -n opendatahub
 NAME                                          READY   STATUS    RESTARTS   AGE
 jupyter-web-app-deployment-54b74f4b8b-2hkwp   2/2     Running   0          76s
@@ -71,6 +71,27 @@ $ oc get route jupyter -n opendatahub
 NAME      HOST/PORT
 jupyter   jupyter-opendatahub.apps.user.dev.datahub.redhat.com
 ```
+
+## Spawn a Notebook
+
+Set up the `kubeflow-user` namespace to allow the operator to instantiate
+notebooks in it:
+
+```shell
+$ oc apply -f notebooks/namespace -n kubeflow-user
+```
+
+Allow the `openldap-user1` user to create notebooks in the `kubeflow-user`
+namespace:
+
+```shell
+$ oc apply -f notebooks/users/openldap-user1.yaml -n kubeflow-user
+```
+
+Log in into the Jupyter web app interface and create a new notebook with that
+user:
+
+![SciPy Notebook](assets/jwa-jupyter-scipy.png)
 
 ## References
 
