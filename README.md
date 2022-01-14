@@ -23,6 +23,27 @@ $ git filter-repo \
 $ rm -rf .git
 ```
 
+## Deploy controller manager
+
+Install the `notebooks.kubeflow.org` CRD in your cluster:
+
+```shell
+$ cd kubeflow-components/notebook-controller
+$ make install
+$ oc get crd notebooks.kubeflow.org
+NAME                     CREATED AT
+notebooks.kubeflow.org   2022-01-14T11:15:14Z
+```
+
+Deploy the notebook controller manager:
+
+```
+$ make deploy
+$ oc get pods -n opendatahub
+NAME                                            READY   STATUS    RESTARTS   AGE
+notebook-controller-deployment-cd65889c-9jpvb   1/1     Running   0          7s
+```
+
 ## References
 
 - https://github.com/kubeflow/kubeflow
