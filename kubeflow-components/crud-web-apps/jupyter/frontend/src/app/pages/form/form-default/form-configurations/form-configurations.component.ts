@@ -22,9 +22,10 @@ export class FormConfigurationsComponent implements OnInit, OnDestroy {
     // Keep track of the selected namespace
     const nsSub = this.ns.getSelectedNamespace().subscribe(namespace => {
       // Get the PodDefaults of the new Namespace
-      this.backend.getPodDefaults(namespace).subscribe(pds => {
-        this.podDefaults = pds;
-      });
+      // this.backend.getPodDefaults(namespace).subscribe(pds => {
+      //   this.podDefaults = pds;
+      // });
+      this.podDefaults = null;
     });
 
     this.subscriptions.add(nsSub);

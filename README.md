@@ -14,7 +14,7 @@ $ git filter-repo --subdirectory-filter components
 
 Prune everything but `notebook-controller` and `jupyter` components:
 
-```
+```shell
 $ git filter-repo \
     --path common \
     --path notebook-controller \
@@ -37,11 +37,39 @@ notebooks.kubeflow.org   2022-01-14T11:15:14Z
 
 Deploy the notebook controller manager:
 
-```
+```shell
 $ make deploy
-$ oc get pods -n opendatahub
+```
+
+Verify that notebook controller manager pod is running:
+
+```shell
+$ oc get pods -l app=notebook-controller -n opendatahub
 NAME                                            READY   STATUS    RESTARTS   AGE
 notebook-controller-deployment-cd65889c-9jpvb   1/1     Running   0          7s
+```
+
+## Deploy JWA (Jupyter Web App)
+
+Deploy the Jupyter web app with the `Openshift` overlay:
+
+```shell
+$ cd kubeflow-components/crud-web-apps/jupyter
+$ kustomize build manifests/overlays/openshift | oc apply -f -
+```
+
+Verify that Jupyter web app pods are running, and the route is accessible:
+
+```
+$ oc get pods -l app=jupyter-web-app -n opendatahub
+NAME                                          READY   STATUS    RESTARTS   AGE
+jupyter-web-app-deployment-54b74f4b8b-2hkwp   2/2     Running   0          76s
+jupyter-web-app-deployment-54b74f4b8b-6k7lw   2/2     Running   0          102s
+jupyter-web-app-deployment-54b74f4b8b-ds8fq   2/2     Running   0          87s
+
+$ oc get route jupyter -n opendatahub
+NAME      HOST/PORT
+jupyter   jupyter-opendatahub.apps.user.dev.datahub.redhat.com
 ```
 
 ## References

@@ -1,0 +1,10 @@
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: jupyter
+spec:
+  port:
+    targetPort: oauth-proxy
+  tls:
+    termination: Reencrypt

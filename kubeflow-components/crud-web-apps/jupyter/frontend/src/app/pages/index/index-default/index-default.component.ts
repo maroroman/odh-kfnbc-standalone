@@ -143,7 +143,11 @@ export class IndexDefaultComponent implements OnInit, OnDestroy {
 
   public connectClicked(notebook: NotebookProcessedObject) {
     // Open new tab to work on the Notebook
-    window.open(`/notebook/${notebook.namespace}/${notebook.name}/`);
+    let jwa_url = window.location.hostname.split(".");
+    jwa_url.shift();
+    let notebook_domain = jwa_url.join(".");
+    window.open(`https://${notebook.name}-${notebook.namespace}.${notebook_domain}/notebook/${notebook.namespace}/${notebook.name}`)
+    //window.open(`/notebook/${notebook.namespace}/${notebook.name}/`);
   }
 
   public startStopClicked(notebook: NotebookProcessedObject) {

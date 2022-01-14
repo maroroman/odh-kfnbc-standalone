@@ -1,0 +1,93 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment
+spec:
+  template:
+    spec:
+      containers:
+        - name: jupyter-web-app
+          env:
+            - name: APP_PREFIX
+              value: "/"
+            - name: USERID_HEADER
+              value: X-Forwarded-User
+        - name: oauth-proxy
+          image: registry.redhat.io/openshift4/ose-oauth-proxy
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          args:
+            - --provider=openshift
+            - --https-address=:8443
+            - --http-address=
+            - --openshift-service-account=jupyter-web-app-service-account
+            - --cookie-name=_odh_oauth_proxy
+            - --cookie-secret-file=/etc/oauth/config/cookie_secret
+            - --cookie-domain=.apps.svelosol.dev.datahub.redhat.com # TODO: Do not hardcode this value
+            - --tls-cert=/etc/tls/private/tls.crt
+            - --tls-key=/etc/tls/private/tls.key
+            - --upstream=http://localhost:5000
+            - --upstream-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+            - --skip-auth-regex=^/metrics
+            - --email-domain=*
+          ports:
+            - containerPort: 8443
+              name: oauth-proxy
+              protocol: TCP
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /oauth/healthz
+              port: oauth-proxy
+              scheme: HTTPS
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /oauth/healthz
+              port: oauth-proxy
+              scheme: HTTPS
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 200m
+              memory: 150Mi
+            requests:
+              cpu: 100m
+              memory: 50Mi
+          volumeMounts:
+            - name: oauth-config
+              mountPath: /etc/oauth/config
+            - name: tls-certificates
+              mountPath: /etc/tls/private
+      volumes:
+        - name: oauth-config
+          secret:
+            defaultMode: 420
+            secretName: oauth-config
+        - name: tls-certificates
+          secret:
+            defaultMode: 420
+            secretName: jupyter-web-app-tls
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: jupyter-web-app
+                namespaces:
+                  - opendatahub # TODO: Do not hardcode this value
+                topologyKey: kubernetes.io/hostname
+              weight: 100

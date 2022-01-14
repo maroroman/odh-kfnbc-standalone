@@ -1,0 +1,41 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: opendatahub
+bases:
+  - ../../base
+resources:
+  - route.yaml
+  - oauth-proxy/configuration.yaml
+commonLabels:
+  app: jupyter-web-app
+  kustomize.component: jupyter-web-app
+images:
+  # TODO: Do not use this image
+  - name: public.ecr.aws/j1r0q0g6/notebooks/jupyter-web-app
+    newName: quay.io/samuvl/jupyter-web-app
+    newTag: 641c457
+  # TODO: Do not use this image
+  - name: registry.redhat.io/openshift4/ose-oauth-proxy
+    newName: quay.io/samuvl/ose-oauth-proxy
+    newTag: fix-openshift-sar
+replicas:
+  - name: jupyter-web-app-deployment
+    count: 3
+patches:
+  - path: oauth-proxy/sidecar-patch.yaml
+    target:
+      kind: Deployment
+      name: jupyter-web-app-deployment
+  - path: oauth-proxy/service-patch.yaml
+    target:
+      kind: Service
+      name: jupyter-web-app-service
+  - path: oauth-proxy/route-patch.yaml
+    target:
+      kind: Route
+      name: jupyter
+  - path: oauth-proxy/service-account-patch.yaml
+    target:
+      kind: ServiceAccount
+      name: jupyter-web-app-service-account
