@@ -368,7 +368,7 @@ def add_ose_oauth_proxy(notebook):
                 "--openshift-service-account=default-editor",
                 "--cookie-name=_odh_oauth_proxy",
                 "--cookie-secret-file=/etc/oauth/config/cookie_secret",
-                "--cookie-domain=.apps.svelosol.dev.datahub.redhat.com",
+                "--cookie-domain=.apps.mroman.dev.datahub.redhat.com",
                 "--pass-access-token=true",
                 "--tls-cert=/etc/tls/private/tls.crt",
                 "--tls-key=/etc/tls/private/tls.key",

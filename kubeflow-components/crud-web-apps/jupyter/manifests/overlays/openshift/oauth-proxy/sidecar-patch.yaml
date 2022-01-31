@@ -28,7 +28,7 @@ spec:
             - --openshift-service-account=jupyter-web-app-service-account
             - --cookie-name=_odh_oauth_proxy
             - --cookie-secret-file=/etc/oauth/config/cookie_secret
-            - --cookie-domain=.apps.svelosol.dev.datahub.redhat.com # TODO: Do not hardcode this value
+            - --cookie-domain=.apps.mroman.dev.datahub.redhat.com # TODO: Do not hardcode this value
             - --pass-access-token=true
             - --tls-cert=/etc/tls/private/tls.crt
             - --tls-key=/etc/tls/private/tls.key
