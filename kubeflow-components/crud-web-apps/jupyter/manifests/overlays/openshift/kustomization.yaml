@@ -11,10 +11,11 @@ commonLabels:
   app: jupyter-web-app
   kustomize.component: jupyter-web-app
 images:
+  # CHANGED FOR UI TESTING
   # TODO: Do not use this image
   - name: public.ecr.aws/j1r0q0g6/notebooks/jupyter-web-app
-    newName: quay.io/samuvl/jupyter-web-app
-    newTag: 641c457
+    newName: quay.io/mroman_redhat/jh-web-app
+    newTag: jsp-ui
   # TODO: Do not use this image
   - name: registry.redhat.io/openshift4/ose-oauth-proxy
     newName: quay.io/samuvl/ose-oauth-proxy
