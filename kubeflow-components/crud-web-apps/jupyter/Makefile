@@ -1,4 +1,4 @@
-GIT_TAG ?= jsp-ui-v2
+GIT_TAG ?= jsp-ui-v7
 IMG ?= quay.io/mroman_redhat/jh-web-app
 DOCKERFILE ?= jupyter/Dockerfile
 

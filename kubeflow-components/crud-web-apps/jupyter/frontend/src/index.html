@@ -1,9 +1,9 @@
-{% extends "page.html" %}
+<!--{% extends "page.html" %}
 {% if announcement_spawn %}
   {% set announcement = announcement_spawn %}
-{% endif %}
+{% endif %} -->
 
-{% block main %}
+<!--VALUES IGNORED FOR QUICK DEVELOPMENT PURPOSES
 
 <script type="text/javascript">
   window.jhdata['spawn-url'] = '{{ url }}'
@@ -19,6 +19,7 @@
     window.jhdata['error_message'] = '{{ error_message }}'
   </script>
 {% endif %}
+-->
 <html lang="en-US">
   <head>
     <meta charset="utf-8" />
@@ -32,5 +33,3 @@
     <div id="root"></div>
   </body>
 </html>
-
-{% endblock %}
