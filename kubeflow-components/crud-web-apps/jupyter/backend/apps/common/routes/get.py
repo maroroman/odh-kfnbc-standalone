@@ -2,6 +2,8 @@ from kubeflow.kubeflow.crud_backend import api, logging
 
 from .. import utils
 from . import bp
+import flask
+
 
 log = logging.getLogger(__name__)
 
@@ -69,3 +71,11 @@ def get_gpu_vendors():
     available_vendors = installed_resources.intersection(config_vendor_keys)
 
     return api.success_response("vendors", list(available_vendors))
+
+
+@bp.route("/api/debug")
+def get_debug_ui():
+    """
+    Return a HTML file of the debug UI for manual API testing
+    """
+    return open("./apps/common/routes/debug.html", "r").read()

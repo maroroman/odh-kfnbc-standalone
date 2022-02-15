@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+    <h1>ONC API Commands</h1>
+
+    <h2>GET /api/config</h2>
+    <p>Loads spawner UI config</p>
+    <h2>GET /api/gpus</h2>
+    <p>Returns a list of GPU vendors for which at least one node has the necessary annotation required to schedule pods</p>
+    <h2>GET /api/namespaces/&ltnamespace>/pvcs</h2>
+    <p>Returns PVC information</p>
+    <h2>GET /api/namespaces/&ltnamespace>/poddefaults</h2>
+    <p>Returns a list of (label, desc) with pod defaults</p>
+    <h2>GET /api/namespaces/&ltnamespace>/notebooks</h2>
+    <p>Returns notebook information</p>
+    <h2>POST /api/namespaces/&ltnamespace>/notebooks</h2>
+    <p>Applies notebook information (spawns a notebook)</p>
+    <h2>PATCH /api/namespaces/&ltnamespace>/notebooks/<notebook></h2>
+    <p>Applies start/stop annotation (stopping without deleting)</p>
+    <h2>DELETE /api/namespaces/&ltnamespace>/notebooks/<notebook></h2>
+    <p>Deletes the notebook.</p>
+    
+    
+    <h2>API CALL MAKER</h2>
+    <select id="method">
+        <option value="GET">GET</option>
+        <option value="POST">POST</option>
+        <option value="PATCH">PATCH</option>
+        <option value="DELETE">DELETE</option>
+    </select>
+    <label for="address">Address:</label>
+    <input type="text" id="address" name="address"><br><br>
+    <label for="body">Body:</label>
+    <input type="text" id="body" name="body"><br><br>
+
+    <button type="button" id="send">Send</button>
+
+    <pre id="output">Output</pre>
+
+</body>
+<script>
+    function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for(let i = 0; i <ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+        }
+
+    var adr = document.getElementById("address");
+    var body = document.getElementById("body");
+    var dropdown = document.getElementById("method")
+    var btn = document.getElementById("send");
+    var out = document.getElementById("output");
+    btn.onclick = function(){
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open(dropdown.value, adr.value, false);
+        xmlHttp.setRequestHeader("Content-Type", "application/json");
+        xmlHttp.setRequestHeader('X-XSRF-TOKEN', getCookie('XSRF-TOKEN'))
+        xmlHttp.withCredentials = true;
+        xmlHttp.send(body.value);
+        out.textContent = JSON.stringify(xmlHttp.responseText, null, 2);
+    }
+</script>
+</html>

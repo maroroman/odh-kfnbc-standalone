@@ -1,0 +1,31 @@
+{
+"name":"mroman-test-api",
+"namespace":"kubeflow-user",
+"image":"public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-scipy:master-6e4ad3b4",
+"allowCustomImage":true,
+"imagePullPolicy":"IfNotPresent",
+"customImage":"",
+"customImageCheck":false,
+"serverType":"jupyter",
+"cpu":"0.5",
+"cpuLimit":"0.6",
+"memory":"1Gi",
+"memoryLimit":"1.2Gi",
+"gpus":{"num":"none"},
+"noWorkspace":false,
+"workspace":{
+    "type":"New",
+    "name":"workspace-mroman-test-api",
+    "templatedName":"workspace-{notebook-name}",
+    "size":"5Gi",
+    "templatedPath":"/home/jovyan",
+    "mode":"ReadWriteOnce",
+    "class":"{none}",
+    "extraFields":{}
+    },
+"affinityConfig":"",
+"tolerationGroup":"",
+"datavols":[],
+"shm":true,
+"configurations":[]
+}
