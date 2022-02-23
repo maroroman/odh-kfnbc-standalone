@@ -3,9 +3,12 @@ import os
 from kubernetes import client
 from werkzeug import exceptions
 
-from kubeflow.kubeflow.crud_backend import helpers, logging
+from . import config_app
 
-from . import status
+if not config_app.TESTING_MODE:
+    from kubeflow.kubeflow.crud_backend import helpers, logging
+else:
+    from . import helpers, logging
 
 log = logging.getLogger(__name__)
 

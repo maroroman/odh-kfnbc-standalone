@@ -3,12 +3,18 @@ import datetime as dt
 from flask import request
 from werkzeug import exceptions
 
-from kubeflow.kubeflow.crud_backend import api, decorators, logging
+from . import config_app
+
+if not config_app.TESTING_MODE:
+    from kubeflow.kubeflow.crud_backend import api, decorators, logging
+    log = logging.getLogger(__name__)
+else:
+    log = config_app.Logger
 
 from .. import status
 from . import bp
 
-log = logging.getLogger(__name__)
+
 
 STOP_ATTR = "stopped"
 ATTRIBUTES = set([STOP_ATTR])

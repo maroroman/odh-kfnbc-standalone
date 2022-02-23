@@ -1,8 +1,12 @@
 import os
 import sys
 
-from apps import default, rok
-from kubeflow.kubeflow.crud_backend import config, logging
+from apps import default, rok, common
+
+if not common.config_app.TESTING_MODE:
+    from kubeflow.kubeflow.crud_backend import config, logging
+else:
+    from ...common.backend.kubeflow.kubeflow.crud_backend import config, logging
 
 log = logging.getLogger(__name__)
 

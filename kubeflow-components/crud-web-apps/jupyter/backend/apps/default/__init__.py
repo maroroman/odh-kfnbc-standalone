@@ -1,6 +1,8 @@
 import os
+from ..common import config_app
 
-from kubeflow.kubeflow.crud_backend import config, logging
+if not config_app.TESTING_MODE:
+    from kubeflow.kubeflow.crud_backend import config, logging
 
 from ..common import create_app as create_default_app
 from .routes import bp as routes_bp

@@ -2,7 +2,10 @@ import json
 
 from werkzeug.exceptions import BadRequest
 
-from kubeflow.kubeflow.crud_backend import logging
+if not config_app.TESTING_MODE:
+    from kubeflow.kubeflow.crud_backend import logging
+else:
+    from . import logging
 
 from . import utils
 

@@ -1,5 +1,10 @@
-import kubeflow.kubeflow.crud_backend as base
-from kubeflow.kubeflow.crud_backend import config, logging
+from . import config_app
+
+if not config_app.TESTING_MODE:
+    import kubeflow.kubeflow.crud_backend as base
+    from kubeflow.kubeflow.crud_backend import config, logging
+else:
+    from .....common.backend.kubeflow.kubeflow.crud_backend import *
 
 from .routes import bp as routes_bp
 

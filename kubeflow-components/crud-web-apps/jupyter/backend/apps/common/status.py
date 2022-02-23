@@ -1,6 +1,10 @@
 import datetime as dt
+from . import config_app
 
-from kubeflow.kubeflow.crud_backend import api, status
+if not config_app.TESTING_MODE:
+    from kubeflow.kubeflow.crud_backend import api, status
+else:
+    from . import api, status
 
 EVENT_TYPE_WARNING = "Warning"
 STOP_ANNOTATION = "kubeflow-resource-stopped"

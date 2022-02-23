@@ -1,8 +1,12 @@
-from kubeflow.kubeflow.crud_backend import api, logging
+from . import config_app
+
+if not config_app.TESTING_MODE:
+    from kubeflow.kubeflow.crud_backend import api, logging
+    log = logging.getLogger(__name__)
+else:
+    log = config_app.Logger
 
 from . import bp
-
-log = logging.getLogger(__name__)
 
 
 @bp.route(
