@@ -1,4 +1,6 @@
 import json
+import pathlib
+import os
 #from .. import utils
 
 # from kubeflow.kubeflow.crud_backend import helpers
@@ -18,5 +20,9 @@ import json
 #     )
 #     return mock_notebook
 
-def get_mock_config(): 
-    pass
+path = pathlib.Path().resolve().as_posix()+"/tests"
+# path = os.environ['VIRTUAL_ENV']
+
+def get_mock_data(data):
+    with open(path + data, "r") as f:
+        return json.loads(f.read())

@@ -1,0 +1,26 @@
+{
+    "pvcs": [
+      {
+        "class": "standard", 
+        "mode": [
+          "ReadWriteOnce"
+        ], 
+        "name": "workspace-mroman-test", 
+        "namespace": "kubeflow-user", 
+        "size": "5Gi"
+      }, 
+      {
+        "class": "standard", 
+        "mode": [
+          "ReadWriteOnce"
+        ], 
+        "name": "workspace-mroman-test-api", 
+        "namespace": "kubeflow-user", 
+        "size": "5Gi"
+      }
+    ], 
+    "status": 200, 
+    "success": true, 
+    "user": null
+  }
+  

@@ -1,0 +1,53 @@
+{
+    "notebooks": [
+      {
+        "age": "13 days ago", 
+        "cpu": "0.5", 
+        "gpus": {
+          "count": 0, 
+          "message": ""
+        }, 
+        "image": "public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-scipy:master-6e4ad3b4", 
+        "memory": "1Gi", 
+        "name": "mroman-test", 
+        "namespace": "kubeflow-user", 
+        "serverType": "jupyter", 
+        "shortImage": "jupyter-scipy:master-6e4ad3b4", 
+        "status": {
+          "message": "Running", 
+          "phase": "ready", 
+          "state": ""
+        }, 
+        "volumes": [
+          "workspace-mroman-test", 
+          "dshm"
+        ]
+      }, 
+      {
+        "age": "13 days ago", 
+        "cpu": "0.5", 
+        "gpus": {
+          "count": 0, 
+          "message": ""
+        }, 
+        "image": "public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-scipy:master-6e4ad3b4", 
+        "memory": "1Gi", 
+        "name": "mroman-test-api", 
+        "namespace": "kubeflow-user", 
+        "serverType": "jupyter", 
+        "shortImage": "jupyter-scipy:master-6e4ad3b4", 
+        "status": {
+          "message": "Running", 
+          "phase": "ready", 
+          "state": ""
+        }, 
+        "volumes": [
+          "workspace-mroman-test-api", 
+          "dshm"
+        ]
+      }
+    ], 
+    "status": 200, 
+    "success": true, 
+    "user": null
+  }
